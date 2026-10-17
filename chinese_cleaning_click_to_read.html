@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>家务清洁中文点读卡</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f1f8ff;color:#18334a}
+header{background:linear-gradient(135deg,#239fe6,#526fe8);color:#fff;text-align:center;padding:24px 14px 20px}
+h1{font-size:25px;margin:0 0 8px}header p{margin:0;font-size:14px}
+main{max-width:900px;margin:auto;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:#fff;border-radius:18px;padding:14px 10px;text-align:center;box-shadow:0 3px 12px #18334a12;border:1px solid #dcebf7}
+.pic{font-size:48px;line-height:1.35}.word{font-size:24px;font-weight:800;margin:5px 0}.pinyin{color:#567084;font-size:15px}.en{font-size:13px;margin-top:6px}.jp{font-size:13px;color:#526579;margin-top:3px}
+button{border:0;border-radius:999px;background:#167fce;color:#fff;font-size:16px;font-weight:700;padding:11px 14px;width:100%;margin-top:12px;cursor:pointer}
+button:active{transform:scale(.98)}.status{text-align:center;font-size:14px;min-height:22px;margin:14px 0;color:#2366a0}.note{font-size:12px;color:#607487;text-align:center;line-height:1.6;margin:16px 4px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header><h1>🧹 家务清洁中文点读卡</h1><p>点击任意一个小喇叭，单独听这个词的普通话发音</p></header>
+<main>
+<div id="status" class="status" aria-live="polite">请选择一个词语开始学习</div>
+<div class="grid">
+<article class="card"><div class="pic">🧽</div><div class="word">擦拭</div><div class="pinyin">cā shì</div><div class="en">wipe</div><div class="jp">拭く</div><button data-word="擦拭">🔊 听「擦拭」</button></article>
+<article class="card"><div class="pic">🫧</div><div class="word">喷洒</div><div class="pinyin">pēn sǎ</div><div class="en">spray</div><div class="jp">スプレーする</div><button data-word="喷洒">🔊 听「喷洒」</button></article>
+<article class="card"><div class="pic">🪥</div><div class="word">刷洗</div><div class="pinyin">shuā xǐ</div><div class="en">scrub</div><div class="jp">こすり洗いする</div><button data-word="刷洗">🔊 听「刷洗」</button></article>
+<article class="card"><div class="pic">✨</div><div class="word">擦干</div><div class="pinyin">cā gān</div><div class="en">wipe dry</div><div class="jp">拭いて乾かす</div><button data-word="擦干">🔊 听「擦干」</button></article>
+<article class="card"><div class="pic">🚿</div><div class="word">冲洗</div><div class="pinyin">chōng xǐ</div><div class="en">rinse</div><div class="jp">すすぎ洗いする</div><button data-word="冲洗">🔊 听「冲洗」</button></article>
+<article class="card"><div class="pic">🧺</div><div class="word">拧干</div><div class="pinyin">níng gān</div><div class="en">wring out</div><div class="jp">しぼる</div><button data-word="拧干">🔊 听「拧干」</button></article>
+<article class="card"><div class="pic">🪒</div><div class="word">刮掉</div><div class="pinyin">guā diào</div><div class="en">scrape off</div><div class="jp">こそげ落とす</div><button data-word="刮掉">🔊 听「刮掉」</button></article>
+<article class="card"><div class="pic">🪶</div><div class="word">掸掉</div><div class="pinyin">dǎn diào</div><div class="en">dust off</div><div class="jp">ほこりを払う</div><button data-word="掸掉">🔊 听「掸掉」</button></article>
+<article class="card"><div class="pic">🧺</div><div class="word">收好</div><div class="pinyin">shōu hǎo</div><div class="en">put away</div><div class="jp">片付ける</div><button data-word="收好">🔊 听「收好」</button></article>
+</div>
+<p class="note">语音使用设备或浏览器提供的中文语音。不同 iPhone 的声音可能不同。<br>如果没有声音，请尝试用 Safari 打开，并检查手机静音及语音设置。</p>
+</main>
+<script>
+const statusEl=document.getElementById('status');
+function playWord(word){
+ if(!('speechSynthesis' in window)||!window.SpeechSynthesisUtterance){statusEl.textContent='此浏览器暂不支持语音播放，请尝试 Safari。';return;}
+ window.speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(word);
+ u.lang='zh-CN';u.rate=0.82;u.pitch=1;
+ const voices=window.speechSynthesis.getVoices();
+ const voice=voices.find(v=>v.lang.toLowerCase()==='zh-cn')||voices.find(v=>v.lang.toLowerCase().startsWith('zh'));
+ if(voice)u.voice=voice;
+ statusEl.textContent='正在播放：'+word;
+ u.onend=()=>statusEl.textContent='播放完成：'+word;
+ u.onerror=()=>statusEl.textContent='播放失败，请尝试 Safari 或检查语音设置。';
+ window.speechSynthesis.speak(u);
+}
+document.querySelectorAll('button[data-word]').forEach(b=>b.addEventListener('click',()=>playWord(b.dataset.word)));
+</script>
+</body>
+</html>
